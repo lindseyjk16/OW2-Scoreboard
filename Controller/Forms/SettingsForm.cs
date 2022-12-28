@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace OwScoreBoardController
+namespace OW2ScoreboardController
 {
 	public partial class SettingsForm : Form
 	{
-		// ロゴ画像への相対パス (拡張子なし)
+		// Relative path to logo image (no extension)
 		private static string LogoFileNameWithoutExtension = "./user/Logo";
 
 		public SettingsForm()
@@ -23,10 +23,10 @@ namespace OwScoreBoardController
 
 		private void SettingsForm_Load( object sender, EventArgs e )
 		{
-			// 最大化を無効に
-			this.MaximizeBox = false;
+            // Disable maximize button
+            this.MaximizeBox = false;
 
-			// コンフィグを読み込んで値をセット
+			// Read config and set values
 			ConfigManager.Config Config = ConfigManager.Load();
 			NameTextBox.Text = Config.Name;
 			LogoPictureBox.ImageLocation = Config.LogoImageFilePath;
@@ -61,7 +61,7 @@ namespace OwScoreBoardController
 			if( Config.DrawHotkey.ModKey.HasFlag( MOD_KEY.ALT ) ) DrawHotkeyModCheckbox_Alt.Checked = true;
 			if( Config.DrawHotkey.ModKey.HasFlag( MOD_KEY.SHIFT ) ) DrawHotkeyModCheckbox_Shift.Checked = true;
 
-			// 言語をセット
+			// Set language
 			SetLanguage();
 		}
 
@@ -81,10 +81,10 @@ namespace OwScoreBoardController
 			ColorDialog cd = new ColorDialog();
 			PictureBox Sender = (PictureBox)sender;
 
-			//ダイアログを表示する
+			// Show the dialog
 			if( cd.ShowDialog() == DialogResult.OK )
 			{
-				//選択された色の取得
+				// Get selected colour
 				Sender.BackColor = cd.Color;
 			}
 		}
@@ -100,28 +100,18 @@ namespace OwScoreBoardController
 		}
 
 		/// <summary>
-		/// OK ボタンをクリックした
+		/// Clicked the OK button
 		/// </summary>
 		private void OKButton_Click( object sender, EventArgs e )
 		{
-			// ショートカットキーの正常確認
+			// Confirm the hotkeys are valid
 			if( !ValidateHotkeys() )
 			{
-				LanguageManager.Language Language;
+                // Get language struct according to settings
+                // NOTE: Only English is currently supported
+                LanguageManager.Language Language = LanguageManager.Get();
 
-				// 設定に応じた言語オブジェクトを取得
-				if (Properties.Settings.Default.Language == "Automatic")
-				{
-					// OS の言語を取得
-					string OSLanguage = System.Globalization.CultureInfo.CurrentCulture.Name;
-					Language = LanguageManager.Get(OSLanguage);
-				}
-				else
-				{
-					Language = LanguageManager.Get(Properties.Settings.Default.Language);
-				}
-
-				string WarningMesage = Language.InvalidHotkeyWarningMessage;
+                string WarningMesage = Language.InvalidHotkeyWarningMessage;
 				string WarningTitle = Language.InvalidHotkeyWarningTitle;
 
 				DialogResult result = MessageBox.Show
@@ -139,10 +129,10 @@ namespace OwScoreBoardController
 				}
 			}
 
-			// スコアボードの表示位置を文字列化
+			// Convert the display position of the scoreboard to a string
 			string ScoreBoardPosition = ScoreBoardPositionRadio_Top.Checked ? "top" : "bottom";
 
-			// ロゴ画像を選択した場合はアプリケーションフォルダ内に複製
+			// If the logo image is selected, copy it into the application folder
 			string Extension = Path.GetExtension( LogoPictureBox.ImageLocation );
 			if( LogoPictureBox.ImageLocation != LogoFileNameWithoutExtension + Extension && LogoPictureBox.ImageLocation != null && LogoPictureBox.ImageLocation != string.Empty )
 			{
@@ -154,7 +144,7 @@ namespace OwScoreBoardController
 				LogoPictureBox.ImageLocation = LogoFileNameWithoutExtension + Extension;
 			}
 
-			// ホットキーのデータを作成
+			// Create hotkey data
 			KeysConverter kc = new KeysConverter();
 			ConfigManager.HotkeyData WinHotkey = new ConfigManager.HotkeyData();
 			if( !string.IsNullOrEmpty( WinHotkeyCombobox.Text ) ) WinHotkey.KeyCode = (Keys)kc.ConvertFromString( WinHotkeyCombobox.Text );
@@ -174,7 +164,7 @@ namespace OwScoreBoardController
 			if( DrawHotkeyModCheckbox_Alt.Checked ) DrawHotkey.ModKey |= MOD_KEY.ALT;
 			if( DrawHotkeyModCheckbox_Shift.Checked ) DrawHotkey.ModKey |= MOD_KEY.SHIFT;
 
-			// Config を作成
+			// Create a config
 			ConfigManager.Config Config = new ConfigManager.Config
 			(
 				NameTextBox.Text,
@@ -191,16 +181,16 @@ namespace OwScoreBoardController
 				EnableProductionCheckbox.Checked
 			);
 
-			// 保存
+			// Save
 			ConfigManager.Save( Config );
 
-			// フォームを閉じる
+			// Close form
 			this.Close();
 		}
 
 		private void CancelButton_Click( object sender, EventArgs e )
 		{
-			// フォームを閉じる
+			// Close form
 			this.Close();
 		}
 
@@ -234,9 +224,9 @@ namespace OwScoreBoardController
 		}
 
 		/// <summary>
-		/// ホットキーの設定が有効なものであるかを確認
+		/// Checks if the hotkey settings are valid.
 		/// </summary>
-		/// <returns>正しく設定されていれば true, それ以外は false を返す。</returns>
+		/// <returns>True if set correctly, false otherwise.</returns>
 		private bool ValidateHotkeys()
 		{
 			bool ret = true;
@@ -250,7 +240,7 @@ namespace OwScoreBoardController
 		}
 
 		/// <summary>
-		/// 勝敗演出設定に関するコントロールの有効無効を切り替え
+		/// Enable or disable the win/loss animation control settings.
 		/// </summary>
 		private void SetEnabledRegardingProductionControls( bool Enabled )
 		{
@@ -261,26 +251,16 @@ namespace OwScoreBoardController
 			}
 		}
 
-		/// <summary>
-		/// 言語をセット
-		/// </summary>
-		private void SetLanguage()
+        /// <summary>
+        /// Sets language.
+        /// <para>NOTE: Only English is currently supported.</para>
+        /// </summary>
+        private void SetLanguage()
 		{
-			LanguageManager.Language Language;
+            // Get language struct according to settings
+            LanguageManager.Language Language = LanguageManager.Get();
 
-			// 設定に応じた言語オブジェクトを取得
-			if (Properties.Settings.Default.Language == "Automatic")
-			{
-				// OS の言語を取得
-				string OSLanguage = System.Globalization.CultureInfo.CurrentCulture.Name;
-				Language = LanguageManager.Get(OSLanguage);
-			}
-			else
-			{
-				Language = LanguageManager.Get(Properties.Settings.Default.Language);
-			}
-
-			// 各文言をセット
+			// Set localization
 			this.Text = Language.settingsForm.WindowTitle;
 			SettingsTabControl.TabPages[0].Text = Language.settingsForm.TabPage_General;
 			ProductionGroup.Text = Language.settingsForm.ProductionGroup;

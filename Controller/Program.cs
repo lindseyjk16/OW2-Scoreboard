@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace OwScoreBoardController
+namespace OW2ScoreboardController
 {
 	static class Program
 	{
-		/// <summary>
-		/// アプリケーションのメイン エントリ ポイントです。
-		/// </summary>
-		[STAThread]
+        /// <summary>
+        /// Main entry point for the application.
+        /// </summary>
+        [STAThread]
 		static void Main()
 		{
 			Application.EnableVisualStyles();

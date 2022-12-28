@@ -6,18 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace OwScoreBoardController
+namespace OW2ScoreboardController
 {
 	/// <summary>
-	/// Score ファイルを取り扱うクラス
+	/// Manages saving and loading scores to/from file.
 	/// </summary>
 	public static class ScoreManager
 	{
-		// Score ファイルへの総体パス
+		// Score file path
 		private static string ScoreFilePath = "./score.json";
 
 		/// <summary>
-		/// Score クラス
+		/// Score class.
 		/// </summary>
 		public class Score
 		{
@@ -37,7 +37,7 @@ namespace OwScoreBoardController
 			public string TimeStamp;
 
 			/// <summary>
-			/// コンストラクタ
+			/// Constructor.
 			/// </summary>
 			public Score( int Wins, int Loses, int Draws, bool IsTankStartingRateEnabled, bool IsDamageStartingRateEnabled, bool IsSupportStartingRateEnabled, int TankStartingRate, int DamageStartingRate, int SupportStartingRate, bool IsTankInPlacement, bool IsDamageInPlacement, bool IsSupportInPlacement, bool IsOpenQueueMode)
 			{
@@ -57,7 +57,7 @@ namespace OwScoreBoardController
 			}
 
 			/// <summary>
-			/// 初期設定 Score を返す
+			/// Returns the default Score.
 			/// </summary>
 			public static Score Default()
 			{
@@ -66,7 +66,7 @@ namespace OwScoreBoardController
 		}
 
 		/// <summary>
-		/// Score を Json ファイルに保存
+		/// Save Score to Json file.
 		/// </summary>
 		public static void Save( Score Score )
 		{
@@ -81,13 +81,13 @@ namespace OwScoreBoardController
 		}
 
 		/// <summary>
-		/// Json ファイルから Score を読み込み
+		/// Read Score from Json file.
 		/// </summary>
 		public static Score Load()
 		{
 			Score ret;
 
-			// score.json がない場合はデフォルト設定で作成
+			// Create default if score.json does not exist
 			if( !File.Exists( ScoreFilePath ) )
 			{
 				Score DefaultScore = Score.Default();
@@ -101,7 +101,7 @@ namespace OwScoreBoardController
 
 				ret = DefaultScore;
 			}
-			// config.json がある場合は読み込む
+			// Load score.json if it exists
 			else
 			{
 				StreamReader sr = new StreamReader( ScoreFilePath, Encoding.UTF8 );

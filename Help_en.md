@@ -1,23 +1,23 @@
-# OwScoreBoard Documentation
+# OW2Scoreboard Documentation
 
 ## About
 
-OwScoreBoard is an overlay for use with OBS that displays the starting rating and win-loss record for live Overwatch™ streams.  This is a purely cosmetic overlay and does not collect or report any gameplay statistics.
+OW2Scoreboard is an overlay for use with OBS that displays the starting rating and win-loss record for live Overwatch 2™ streams.  This is a purely cosmetic overlay and does not collect or report any gameplay statistics.
 Match results are manually updated via a button press in the controller panel, or configurable hotkey.  A customizable win-loss animation screen is displayed following a match result update.
 
 ## Disclaimer and Legal
 
 See License:
 
-- https://github.com/HIJIKIsw/OwScoreBoard/blob/master/LICENSE
+- https://github.com/lindseyjk16/OW2Scoreboard/blob/master/LICENSE
 
-Overwatch is a trademark of Blizzard Entertainment, Inc., in the U.S. and/or other countries.
+Overwatch 2 is a trademark of Blizzard Entertainment, Inc., in the U.S. and/or other countries.
 
 ## Releases
 
 Latest releases can be obtained from the following link:
 
-- https://github.com/HIJIKIsw/OwScoreBoard/releases
+- https://github.com/lindseyjk16/OW2Scoreboard/releases
 
 ## Installation
 
@@ -25,7 +25,7 @@ Download latest release and extract archive to any folder on local drive.
 
 ## OBS Configuration
 
-Before using OwScoreBoard, it must be configured with your choice of OBS (Open Broadcasting Software).  The following instructions are valid for OBS Studio, so your mileage may vary with another OBS.
+Before using OW2Scoreboard, it must be configured with your choice of OBS (Open Broadcasting Software).  The following instructions are valid for OBS Studio, so your mileage may vary with another OBS.
 
 1. Create a new Browser source in OBS by clicking on the + button under the Sources box and then select **Browser**.
 
@@ -33,14 +33,14 @@ Before using OwScoreBoard, it must be configured with your choice of OBS (Open B
 
 	![OBS Image](./Help/OBS_Image2_en.png)
 
-2. From the next dialog, select **Create new** and name it OwScoreBoard and click **OK**.
+2. From the next dialog, select **Create new** and name it OW2Scoreboard and click **OK**.
 
 	![OBS Image](./Help/OBS_Image3_en.png)
 
 3. Enter the following values for the source Properties and then click **OK**:
 
 	- Click **Local file** check box
-	- Click on **Browse** and point to location of **OwScoreBoard.html**
+	- Click on **Browse** and point to location of **OW2Scoreboard.html**
 	- Set **Width** and **Height** values to desired stream dimensions
 	- Set **FPS** to 60
 	- Set **Custom CSS** to blank
@@ -51,7 +51,7 @@ The overlay should now display in your stream!
 
 ## Usage
 
-After configuring OwScoreBoard with OBS, execute **OwScoreBoardController.exe**.  This will bring up the controller panel.
+After configuring OW2Scoreboard with OBS, execute **OW2ScoreboardController.exe**.  This will bring up the controller panel.
 
 ![Controller Image](./Help/Controller_Image_en.png)
 

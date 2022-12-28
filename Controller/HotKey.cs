@@ -4,26 +4,26 @@ using System.Threading;
 using System.Windows.Forms;
 
 
-namespace OwScoreBoardController
+namespace OW2ScoreboardController
 {
 	/// <summary>
-	/// グローバルホットキーを登録するクラス。
-	/// 使用後は必ずDisposeすること。
+	/// Registers global hotkeys.
+	/// Always dispose after use.
 	/// </summary>
 	public class HotKey : IDisposable
 	{
 		HotKeyForm form;
 		/// <summary>
-		/// ホットキーが押されると発生する。
+		/// Occurs when a hotkey is pressed.
 		/// </summary>
 		public event EventHandler HotKeyPush;
 
 		/// <summary>
-		/// ホットキーを指定して初期化する。
-		/// 使用後は必ずDisposeすること。
+		/// Initialize a hotkey.
+		/// Always dispose after use.
 		/// </summary>
-		/// <param name="modKey">修飾キー</param>
-		/// <param name="key">キー</param>
+		/// <param name="modKey">Modifier key.</param>
+		/// <param name="key">Keycode.</param>
 		public HotKey( MOD_KEY modKey, Keys key )
 		{
 			form = new HotKeyForm( modKey, key, raiseHotKeyPush );
@@ -88,10 +88,10 @@ namespace OwScoreBoardController
 		}
 	}
 
-	/// <summary>
-	/// HotKeyクラスの初期化時に指定する修飾キー
-	/// </summary>
-	[Flags]
+    /// <summary>
+    /// Modifier key specified when initializing the HotKey class.
+    /// </summary>
+    [Flags]
 	public enum MOD_KEY : int
 	{
 		NONE = 0x0000,

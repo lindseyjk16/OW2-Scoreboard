@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
-namespace OwScoreBoardController
+namespace OW2ScoreboardController
 {
 	public partial class MainForm : Form
 	{
@@ -25,7 +25,7 @@ namespace OwScoreBoardController
 
 		private void OnLoad( object sender, EventArgs e )
 		{
-			// 前回のウィンドウ位置を復元
+			// Restore previous window position
 			Point WindowPosition = Properties.Settings.Default.WindowPosition;
 			Point UnsetValue = new Point(-1234, -5678);
 			if( WindowPosition != UnsetValue )
@@ -33,10 +33,10 @@ namespace OwScoreBoardController
 				DesktopLocation = WindowPosition;
 			}
 
-			// 最大化ボタンを無効化
+			// Disable maximize button
 			this.MaximizeBox = false;
 
-			// 言語設定を復元
+			// Restore language settings
 			switch(Properties.Settings.Default.Language)
 			{
 				case "ja-JP":
@@ -52,7 +52,7 @@ namespace OwScoreBoardController
 			}
 			SetLanguage();
 
-			// Score を読み込んで値をセット
+			// Read score and set values
 			ScoreManager.Score Score = ScoreManager.Load();
 			WinsUpDown.Value = Score.Wins;
 			LosesUpDown.Value = Score.Loses;
@@ -66,10 +66,10 @@ namespace OwScoreBoardController
 			TankInPlacementCheckbox.Checked = Score.IsTankInPlacement;
 			DamageInPlacementCheckbox.Checked = Score.IsDamageInPlacement;
 			SupportInPlacementCheckbox.Checked = Score.IsSupportInPlacement;
-			SetQueMode(Score.IsOpenQueueMode);
+			SetQueueMode(Score.IsOpenQueueMode);
 
-			// ホットキーをセット
-			SetHotkeyFromConfig();
+			// Enable hotkeys
+			SetHotkeysFromConfig();
 		}
 
 		private void LosesUpDown_ValueChanged( object sender, EventArgs e )
@@ -228,19 +228,9 @@ namespace OwScoreBoardController
 
 		private void MenuItem_ClearScore_Click( object sender, EventArgs e )
 		{
-			LanguageManager.Language Language;
-
-			// 設定に応じた言語オブジェクトを取得
-			if (Properties.Settings.Default.Language == "Automatic")
-			{
-				// OS の言語を取得
-				string OSLanguage = System.Globalization.CultureInfo.CurrentCulture.Name;
-				Language = LanguageManager.Get(OSLanguage);
-			}
-			else
-			{
-				Language = LanguageManager.Get(Properties.Settings.Default.Language);
-			}
+			// Get language struct according to settings
+			// NOTE: Only English is currently supported
+			LanguageManager.Language Language = LanguageManager.Get();
 
 			string ConfirmMessage = Language.ScoreClearConfirmMessage;
 			string ConfirmTitle = Language.ScoreClearConfirmTitle;
@@ -277,29 +267,24 @@ namespace OwScoreBoardController
 
 		private void MenuItem_Manual_Click( object sender, EventArgs e )
 		{
-			string Language;
+			// Open localized help document according to settings
+			// Defaults to English if language is unavailable
+			// NOTE: Only English is currently supported
+			string Language = LanguageManager.LanguageCode;
 
-			// 設定に応じたヘルプドキュメントを開く
-			if (Properties.Settings.Default.Language == "Automatic")
-			{
-				// OS の言語を取得
-				Language = System.Globalization.CultureInfo.CurrentCulture.Name;
-			}
-			else
-			{
-				Language = Properties.Settings.Default.Language;
-			}
+            System.Diagnostics.Process.Start("https://github.com/lindseyjk16/OW2Scoreboard/blob/master/Help_en.md");
 
+            /*
 			if (Language == "ja-JP")
 			{
-				System.Diagnostics.Process.Start("https://github.com/HIJIKIsw/OwScoreBoard/blob/master/Help_ja.md");
+				System.Diagnostics.Process.Start("https://github.com/lindseyjk16/OW2Scoreboard/blob/master/Help_ja.md");
 			}
 			else
 			{
-				System.Diagnostics.Process.Start("https://github.com/HIJIKIsw/OwScoreBoard/blob/master/Help_en.md");
+				System.Diagnostics.Process.Start("https://github.com/lindseyjk16/OW2Scoreboard/blob/master/Help_en.md");
 			}
-
-		}
+			*/
+        }
 
 		private void MenuItem_AlwayOnTop_Click( object sender, EventArgs e )
 		{
@@ -314,7 +299,7 @@ namespace OwScoreBoardController
 
 		private void MenuItem_Settings_Click( object sender, EventArgs e )
 		{
-			// ホットキーを無効化
+			// Disable hotkeys
 			if( WinHotkey != null ) WinHotkey.Dispose();
 			if( LoseHotkey != null ) LoseHotkey.Dispose();
 			if( DrawHotkey != null ) DrawHotkey.Dispose();
@@ -325,7 +310,7 @@ namespace OwScoreBoardController
 			Form SettingsForm = new SettingsForm();
 			SettingsForm.ShowInTaskbar = false;
 			SettingsForm.ShowDialog();
-			SetHotkeyFromConfig();
+			SetHotkeysFromConfig();
 		}
 
 		private void MenuItem_StopUpdate_Click( object sender, EventArgs e )
@@ -422,23 +407,23 @@ namespace OwScoreBoardController
 
 		private void MainForm_FormClosing( object sender, FormClosingEventArgs e )
 		{
-			// ホットキーのフックを解除
+			// Dispose hotkeys
 			if( WinHotkey != null ) WinHotkey.Dispose();
 			if( LoseHotkey != null ) LoseHotkey.Dispose();
 			if( DrawHotkey != null ) DrawHotkey.Dispose();
 
-			// ウィンドウの位置を記憶
+			// Remember window position
 			Properties.Settings.Default.WindowPosition = DesktopLocation;
 
-			// 設定を保存する
+			// Save score and settings
 			SaveScore();
 			Properties.Settings.Default.Save();
 		}
 
 		/// <summary>
-		/// Config を読み込んでホットキーをセット
+		/// Load config and enable hotkeys.
 		/// </summary>
-		private void SetHotkeyFromConfig()
+		private void SetHotkeysFromConfig()
 		{
 			ConfigManager.Config Config = ConfigManager.Load();
 			if (Config.WinHotkey.KeyCode != Keys.None && Config.WinHotkey != null)
@@ -458,26 +443,16 @@ namespace OwScoreBoardController
 			}
 		}
 
-		/// <summary>
-		/// 言語をセット
-		/// </summary>
-		private void SetLanguage()
+        /// <summary>
+        /// Set language.
+        /// <para>NOTE: Only English is currently supported.</para>
+        /// </summary>
+        private void SetLanguage()
 		{
-			LanguageManager.Language Language;
+            // Get language struct according to settings
+            LanguageManager.Language Language = LanguageManager.Get();
 
-			// 設定に応じた言語オブジェクトを取得
-			if( Properties.Settings.Default.Language == "Automatic" )
-			{
-				// OS の言語を取得
-				string OSLanguage = System.Globalization.CultureInfo.CurrentCulture.Name;
-				Language = LanguageManager.Get(OSLanguage);
-			}
-			else
-			{
-				Language = LanguageManager.Get(Properties.Settings.Default.Language);
-			}
-
-			// 各文言をセット
+			// Set localization
 			FileMenu.Text = Language.mainForm.FileMenu;
 			MenuItem_Exit.Text = Language.mainForm.MenuItem_Exit;
 			OptionMenu.Text = Language.mainForm.OptionMenu;
@@ -569,7 +544,7 @@ namespace OwScoreBoardController
 
 		private void MainForm_Shown(object sender, EventArgs e)
 		{
-			// 常に最前面に表示状態を復元
+			// Always restore display state to foreground
 			this.TopMost = Properties.Settings.Default.AlwaysOnTop;
 			MenuItem_AlwayOnTop.Checked = this.TopMost;
 		}
@@ -624,15 +599,15 @@ namespace OwScoreBoardController
 
 		private void MenuItem_SwitchOpenQueueMode_Click(object sender, EventArgs e)
 		{
-			SetQueMode(true);
+			SetQueueMode(true);
 		}
 
 		private void MenuItem_SwitchRoleQueueMode_Click(object sender, EventArgs e)
 		{
-			SetQueMode(false);
+			SetQueueMode(false);
 		}
 
-		private void SetQueMode(bool IsOpenQueueMode)
+		private void SetQueueMode(bool IsOpenQueueMode)
 		{
 			MenuItem_SwitchMode_OpenQueue.Checked = IsOpenQueueMode;
 			MenuItem_SwitchMode_RoleQueue.Checked = !IsOpenQueueMode;

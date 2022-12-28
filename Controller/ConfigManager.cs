@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
-namespace OwScoreBoardController
+namespace OW2ScoreboardController
 {
-	/// <summary>
-	/// Config ファイルを取り扱うクラス
-	/// </summary>
-	public static class ConfigManager
+    /// <summary>
+    /// Manages saving and loading program configuration to/from file.
+    /// </summary>
+    public static class ConfigManager
 	{
-		// コンフィグファイルへの相対パス
+		// Config file path
 		private static string ConfigFilePath = "./config.json";
 
 		/// <summary>
-		/// Config クラス
+		/// Config class.
 		/// </summary>
 		public class Config
 		{
@@ -38,7 +38,7 @@ namespace OwScoreBoardController
 			public string TimeStamp;
 
 			/// <summary>
-			/// コンストラクタ
+			/// Constructor.
 			/// </summary>
 			public Config() { }
 			public Config( string Name, string LogoImageFilePath, Color MainColor, Color SubColor, Color FontColor, int SoundVolume, int ScoreBoardSize, string ScoreBoardPosition, HotkeyData WinHotkey, HotkeyData LoseHotkey, HotkeyData DrawHotkey, bool EnableProduction )
@@ -58,7 +58,7 @@ namespace OwScoreBoardController
 			}
 
 			/// <summary>
-			/// 初期設定 Config を返す
+			/// Returns the default Config.
 			/// </summary>
 			/// <returns></returns>
 			public static Config Default()
@@ -82,7 +82,7 @@ namespace OwScoreBoardController
 		}
 
 		/// <summary>
-		/// HotkeyData クラス
+		/// HotkeyData class.
 		/// </summary>
 		public class HotkeyData
 		{
@@ -90,7 +90,7 @@ namespace OwScoreBoardController
 			public MOD_KEY ModKey;
 
 			/// <summary>
-			/// コンストラクタ
+			/// Constructor.
 			/// </summary>
 			public HotkeyData()
 			{
@@ -104,10 +104,10 @@ namespace OwScoreBoardController
 			}
 		}
 
-		/// <summary>
-		/// Config を Json ファイルに保存
-		/// </summary>
-		public static void Save( Config Config )
+        /// <summary>
+        /// Save Config to Json file.
+        /// </summary>
+        public static void Save( Config Config )
 		{
 			// Json ファイルに保存
 			Config.TimeStamp = System.DateTime.Now.ToString();
@@ -119,15 +119,15 @@ namespace OwScoreBoardController
 			fs.Close();
 		}
 
-		/// <summary>
-		/// Json ファイルから Config を読み込み
-		/// </summary>
-		public static Config Load()
+        /// <summary>
+        /// Read Config from Json file.
+        /// </summary>
+        public static Config Load()
 		{
 			Config ret;
 
-			// config.json がない場合はデフォルト設定で作成
-			if (!File.Exists( ConfigFilePath ))
+            // Create default if config.json does not exist
+            if (!File.Exists( ConfigFilePath ))
 			{
 				Config DefaultConfig = Config.Default();
 				string DefaultConfigJson = JsonConvert.SerializeObject( DefaultConfig, Formatting.Indented );
@@ -135,9 +135,9 @@ namespace OwScoreBoardController
 				Save( DefaultConfig );
 				ret = DefaultConfig;
 			}
-			// config.json がある場合は読み込む
-			else
-			{
+            // Load config.json if it exists
+            else
+            {
 				StreamReader sr = new StreamReader( ConfigFilePath, Encoding.UTF8 );
 				string ConfigJson = sr.ReadToEnd();
 				sr.Close();

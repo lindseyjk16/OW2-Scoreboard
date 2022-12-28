@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace OwScoreBoardController
+namespace OW2ScoreboardController
 {
 	public partial class VersionInfoForm : Form
 	{
@@ -19,16 +19,16 @@ namespace OwScoreBoardController
 
 		private void VersionInfoForm_Load( object sender, EventArgs e )
 		{
-			// 最大化ボタンを無効化
-			this.MaximizeBox = false;
+            // Disable maximize button
+            this.MaximizeBox = false;
 
-			// 言語をセット
+			// Set language
 			SetLanguage();
 		}
 
 		private void linkLabel1_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
 		{
-			System.Diagnostics.Process.Start( "https://github.com/HIJIKIsw/OwScoreBoard" );
+			System.Diagnostics.Process.Start("https://github.com/lindseyjk16/OW2-Scoreboard");
 		}
 
 		private void button1_Click( object sender, EventArgs e )
@@ -36,27 +36,18 @@ namespace OwScoreBoardController
 			this.Close();
 		}
 
-		/// <summary>
-		/// 言語をセット
-		/// </summary>
-		private void SetLanguage()
+        /// <summary>
+        /// Sets language.
+        /// <para>NOTE: Only English is currently supported.</para>
+        /// </summary>
+        private void SetLanguage()
 		{
-			LanguageManager.Language Language;
+            // Get language struct according to settings
+			LanguageManager.Language Language = LanguageManager.Get();
 
-			// 設定に応じた言語オブジェクトを取得
-			if (Properties.Settings.Default.Language == "Automatic")
-			{
-				// OS の言語を取得
-				string OSLanguage = System.Globalization.CultureInfo.CurrentCulture.Name;
-				Language = LanguageManager.Get(OSLanguage);
-			}
-			else
-			{
-				Language = LanguageManager.Get(Properties.Settings.Default.Language);
-			}
-
-			// 各文言をセット
-			this.Text = Language.versionInfo.WindowTitle;
+            // Set localization
+            this.Text = Language.versionInfo.WindowTitle;
+			this.VersionNumber.Text = Language.versionInfo.VersionNumber;
 		}
 
 	}
