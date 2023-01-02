@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using DropDownControls;
+using System.Collections;
 
 namespace OW2ScoreboardController
 {
@@ -52,18 +54,26 @@ namespace OW2ScoreboardController
 			}
 			SetLanguage();
 
+			// Populate rank dropdowns
+			PopulateRanks();
+
 			// Read score and set values
 			ScoreManager.Score Score = ScoreManager.Load();
-			WinsUpDown.Value = Score.Wins;
+
+            Rank tankRank = new Rank(Score.TankRankDivision, Score.TankRankTier);
+			Rank damageRank = new Rank(Score.DamageRankDivision, Score.DamageRankTier);
+			Rank supportRank = new Rank(Score.SupportRankDivision, Score.SupportRankTier);
+
+            WinsUpDown.Value = Score.Wins;
 			LosesUpDown.Value = Score.Loses;
 			DrawsUpDown.Value = Score.Draws;
-			TankStartingRateEnabledCheckBox.Checked = Score.IsTankStartingRateEnabled;
-			DamageStartingRateEnabledCheckBox.Checked = Score.IsDamageStartingRateEnabled;
-			SupportStartingRateEnabledCheckBox.Checked = Score.IsSupportStartingRateEnabled;
-			TankStartingRateUpDown.Value = Score.TankStartingRate;
-			DamageStartingRateUpDown.Value = Score.DamageStartingRate;
-			SupportStartingRateUpDown.Value = Score.SupportStartingRate;
-			TankInPlacementCheckbox.Checked = Score.IsTankInPlacement;
+			TankRankEnabledCheckBox.Checked = Score.IsTankRankEnabled;
+			DamageRankEnabledCheckBox.Checked = Score.IsDamageRankEnabled;
+			SupportRankEnabledCheckBox.Checked = Score.IsSupportRankEnabled;
+            TankRankDropdown.SelectedValue = tankRank.Value;
+            DamageRankDropdown.SelectedValue = damageRank.Value;
+            SupportRankDropdown.SelectedValue = supportRank.Value;
+            TankInPlacementCheckbox.Checked = Score.IsTankInPlacement;
 			DamageInPlacementCheckbox.Checked = Score.IsDamageInPlacement;
 			SupportInPlacementCheckbox.Checked = Score.IsSupportInPlacement;
 			SetQueueMode(Score.IsOpenQueueMode);
@@ -72,7 +82,38 @@ namespace OW2ScoreboardController
 			SetHotkeysFromConfig();
 		}
 
-		private void LosesUpDown_ValueChanged( object sender, EventArgs e )
+		/// <summary>
+		/// Populate rank dropdowns.
+		/// </summary>
+		private void PopulateRanks()
+		{
+			List<Rank> allRanks = new List<Rank>();
+			
+			foreach(RankDivision division in Enum.GetValues(typeof(RankDivision)))
+			{
+				foreach(RankTier tier in Enum.GetValues(typeof(RankTier)))
+				{
+					allRanks.Add(new Rank(division, tier));
+				}
+			}
+
+            TankRankDropdown.ValueMember = "Value";
+            TankRankDropdown.DisplayMember = "RankName";
+            TankRankDropdown.GroupMember = "Division";
+            TankRankDropdown.DataSource = new BindingSource(allRanks, String.Empty);
+
+            DamageRankDropdown.ValueMember = "Value";
+            DamageRankDropdown.DisplayMember = "RankName";
+            DamageRankDropdown.GroupMember = "Division";
+            DamageRankDropdown.DataSource = new BindingSource(allRanks, String.Empty);
+
+            SupportRankDropdown.ValueMember = "Value";
+            SupportRankDropdown.DisplayMember = "RankName";
+            SupportRankDropdown.GroupMember = "Division";
+            SupportRankDropdown.DataSource = new BindingSource(allRanks, String.Empty);
+        }
+
+        private void LosesUpDown_ValueChanged( object sender, EventArgs e )
 		{
 			if( LosesUpDown.Value.ToString() == "" )
 			{
@@ -101,43 +142,43 @@ namespace OW2ScoreboardController
 			}
 		}
 
-		private void TankStartingRateUpDown_ValueChanged( object sender, EventArgs e )
-		{
-			if( !MenuItem_StopUpdate.Checked )
-			{
-				ResetTimer();
-			}
-			else
-			{
-				SaveTimer.Enabled = false;
-			}
-		}
+        private void TankRankDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!MenuItem_StopUpdate.Checked)
+            {
+                ResetTimer();
+            }
+            else
+            {
+                SaveTimer.Enabled = false;
+            }
+        }
 
-		private void DamageStartingRateUpDown_ValueChanged(object sender, EventArgs e)
-		{
-			if (!MenuItem_StopUpdate.Checked)
-			{
-				ResetTimer();
-			}
-			else
-			{
-				SaveTimer.Enabled = false;
-			}
-		}
+        private void DamageRankDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!MenuItem_StopUpdate.Checked)
+            {
+                ResetTimer();
+            }
+            else
+            {
+                SaveTimer.Enabled = false;
+            }
+        }
 
-		private void SupportStartingRateUpDown_ValueChanged(object sender, EventArgs e)
-		{
-			if (!MenuItem_StopUpdate.Checked)
-			{
-				ResetTimer();
-			}
-			else
-			{
-				SaveTimer.Enabled = false;
-			}
-		}
+        private void SupportRankDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!MenuItem_StopUpdate.Checked)
+            {
+                ResetTimer();
+            }
+            else
+            {
+                SaveTimer.Enabled = false;
+            }
+        }
 
-		private void DrawsUpDown_ValueChanged( object sender, EventArgs e )
+        private void DrawsUpDown_ValueChanged( object sender, EventArgs e )
 		{
 			if( !MenuItem_StopUpdate.Checked )
 			{
@@ -161,12 +202,18 @@ namespace OW2ScoreboardController
 
 		private void SaveScore()
 		{
-			ScoreManager.Score Score = new ScoreManager.Score
+			Rank tankRank = (Rank)TankRankDropdown.SelectedItem;
+			Rank damageRank = (Rank)DamageRankDropdown.SelectedItem;
+			Rank supportRank = (Rank)SupportRankDropdown.SelectedItem;
+
+            ScoreManager.Score Score = new ScoreManager.Score
 			(
 				(int)WinsUpDown.Value, (int)LosesUpDown.Value, (int)DrawsUpDown.Value,
-				TankStartingRateEnabledCheckBox.Checked, DamageStartingRateEnabledCheckBox.Checked, SupportStartingRateEnabledCheckBox.Checked,
-				(int)TankStartingRateUpDown.Value, (int)DamageStartingRateUpDown.Value, (int)SupportStartingRateUpDown.Value,
-				TankInPlacementCheckbox.Checked, DamageInPlacementCheckbox.Checked, SupportInPlacementCheckbox.Checked,
+				TankRankEnabledCheckBox.Checked, DamageRankEnabledCheckBox.Checked, SupportRankEnabledCheckBox.Checked,
+                tankRank.Division.ToString(), (int)tankRank.Tier,
+                damageRank.Division.ToString(), (int)damageRank.Tier,
+                supportRank.Division.ToString(), (int)supportRank.Tier,
+                TankInPlacementCheckbox.Checked, DamageInPlacementCheckbox.Checked, SupportInPlacementCheckbox.Checked,
 				MenuItem_SwitchMode_OpenQueue.Checked
 			);
 			ScoreManager.Save(Score);
@@ -321,48 +368,6 @@ namespace OW2ScoreboardController
 			}
 		}
 
-		private void TankStartingRateUpDown_KeyUp( object sender, KeyEventArgs e )
-		{
-			if( TankStartingRateUpDown.Text == string.Empty )
-			{
-				TankStartingRateUpDown.Value = 1;
-				TankStartingRateUpDown.Text = "1";
-			}
-
-			if( !MenuItem_StopUpdate.Checked )
-			{
-				ResetTimer();
-			}
-		}
-
-		private void DamageStartingRateUpDown_KeyUp(object sender, KeyEventArgs e)
-		{
-			if (DamageStartingRateUpDown.Text == string.Empty)
-			{
-				DamageStartingRateUpDown.Value = 1;
-				DamageStartingRateUpDown.Text = "1";
-			}
-
-			if (!MenuItem_StopUpdate.Checked)
-			{
-				ResetTimer();
-			}
-		}
-
-		private void SupportStartingRateUpDown_KeyUp(object sender, KeyEventArgs e)
-		{
-			if (SupportStartingRateUpDown.Text == string.Empty)
-			{
-				SupportStartingRateUpDown.Value = 1;
-				SupportStartingRateUpDown.Text = "1";
-			}
-
-			if (!MenuItem_StopUpdate.Checked)
-			{
-				ResetTimer();
-			}
-		}
-
 		private void WinsUpDown_KeyUp( object sender, KeyEventArgs e )
 		{
 			if( WinsUpDown.Text == string.Empty )
@@ -511,8 +516,8 @@ namespace OW2ScoreboardController
 				SaveTimer.Enabled = false;
 			}
 
-			TankStartingRateUpDown.Enabled = !TankInPlacementCheckbox.Checked;
-		}
+			TankRankDropdown.Enabled = !TankInPlacementCheckbox.Checked;
+        }
 
 		private void DamageInPlacementCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
@@ -525,8 +530,8 @@ namespace OW2ScoreboardController
 				SaveTimer.Enabled = false;
 			}
 
-			DamageStartingRateUpDown.Enabled = !DamageInPlacementCheckbox.Checked;
-		}
+			DamageRankDropdown.Enabled = !DamageInPlacementCheckbox.Checked;
+        }
 
 		private void SupportInPlacementCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
@@ -539,8 +544,8 @@ namespace OW2ScoreboardController
 				SaveTimer.Enabled = false;
 			}
 
-			SupportStartingRateUpDown.Enabled = !SupportInPlacementCheckbox.Checked;
-		}
+			SupportRankDropdown.Enabled = !SupportInPlacementCheckbox.Checked;
+        }
 
 		private void MainForm_Shown(object sender, EventArgs e)
 		{
@@ -551,8 +556,8 @@ namespace OW2ScoreboardController
 
 		private void StartingRateTankCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool enabled = TankStartingRateEnabledCheckBox.Checked;
-			TankStartingRateUpDown.Enabled = enabled && !TankInPlacementCheckbox.Checked;
+			bool enabled = TankRankEnabledCheckBox.Checked;
+            TankRankDropdown.Enabled = enabled && !TankInPlacementCheckbox.Checked;
 			TankInPlacementCheckbox.Enabled = enabled;
 
 			if (!MenuItem_StopUpdate.Checked)
@@ -567,9 +572,9 @@ namespace OW2ScoreboardController
 
 		private void StartingRateDamageCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool enabled = DamageStartingRateEnabledCheckBox.Checked;
-			DamageStartingRateUpDown.Enabled = enabled && !DamageInPlacementCheckbox.Checked;
-			DamageInPlacementCheckbox.Enabled = enabled;
+			bool enabled = DamageRankEnabledCheckBox.Checked;
+            DamageRankDropdown.Enabled = enabled && !DamageInPlacementCheckbox.Checked;
+            DamageInPlacementCheckbox.Enabled = enabled;
 
 			if (!MenuItem_StopUpdate.Checked)
 			{
@@ -583,9 +588,9 @@ namespace OW2ScoreboardController
 
 		private void StartingRateSupportCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool enabled = SupportStartingRateEnabledCheckBox.Checked;
-			SupportStartingRateUpDown.Enabled = enabled && !SupportInPlacementCheckbox.Checked;
-			SupportInPlacementCheckbox.Enabled = enabled;
+			bool enabled = SupportRankEnabledCheckBox.Checked;
+            SupportRankDropdown.Enabled = enabled && !SupportInPlacementCheckbox.Checked;
+            SupportInPlacementCheckbox.Enabled = enabled;
 
 			if (!MenuItem_StopUpdate.Checked)
 			{
@@ -612,17 +617,21 @@ namespace OW2ScoreboardController
 			MenuItem_SwitchMode_OpenQueue.Checked = IsOpenQueueMode;
 			MenuItem_SwitchMode_RoleQueue.Checked = !IsOpenQueueMode;
 
-			TankStartingRateEnabledCheckBox.Enabled = !IsOpenQueueMode;
-			DamageStartingRateEnabledCheckBox.Enabled = !IsOpenQueueMode;
-			SupportStartingRateEnabledCheckBox.Enabled = !IsOpenQueueMode;
+			TankRankEnabledCheckBox.Enabled = !IsOpenQueueMode;
+			DamageRankEnabledCheckBox.Enabled = !IsOpenQueueMode;
+			SupportRankEnabledCheckBox.Enabled = !IsOpenQueueMode;
 
-			TankStartingRateUpDown.Enabled = (IsOpenQueueMode && !TankInPlacementCheckbox.Checked || (TankStartingRateEnabledCheckBox.Checked && !TankInPlacementCheckbox.Checked));
-			DamageStartingRateUpDown.Enabled = (!IsOpenQueueMode && DamageStartingRateEnabledCheckBox.Checked && !DamageInPlacementCheckbox.Checked);
-			SupportStartingRateUpDown.Enabled = (!IsOpenQueueMode && SupportStartingRateEnabledCheckBox.Checked && !SupportInPlacementCheckbox.Checked);
+			//TankStartingRateUpDown.Enabled = (IsOpenQueueMode && !TankInPlacementCheckbox.Checked || (TankStartingRateEnabledCheckBox.Checked && !TankInPlacementCheckbox.Checked));
+			//DamageStartingRateUpDown.Enabled = (!IsOpenQueueMode && DamageStartingRateEnabledCheckBox.Checked && !DamageInPlacementCheckbox.Checked);
+			//SupportStartingRateUpDown.Enabled = (!IsOpenQueueMode && SupportStartingRateEnabledCheckBox.Checked && !SupportInPlacementCheckbox.Checked);
 
-			TankInPlacementCheckbox.Enabled = (IsOpenQueueMode || TankStartingRateEnabledCheckBox.Checked);
-			DamageInPlacementCheckbox.Enabled = (!IsOpenQueueMode && DamageStartingRateEnabledCheckBox.Checked);
-			SupportInPlacementCheckbox.Enabled = (!IsOpenQueueMode && SupportStartingRateEnabledCheckBox.Checked);
+            TankRankDropdown.Enabled = (IsOpenQueueMode && !TankInPlacementCheckbox.Checked || (TankRankEnabledCheckBox.Checked && !TankInPlacementCheckbox.Checked));
+            DamageRankDropdown.Enabled = (!IsOpenQueueMode && DamageRankEnabledCheckBox.Checked && !DamageInPlacementCheckbox.Checked);
+            SupportRankDropdown.Enabled = (!IsOpenQueueMode && SupportRankEnabledCheckBox.Checked && !SupportInPlacementCheckbox.Checked);
+
+            TankInPlacementCheckbox.Enabled = (IsOpenQueueMode || TankRankEnabledCheckBox.Checked);
+			DamageInPlacementCheckbox.Enabled = (!IsOpenQueueMode && DamageRankEnabledCheckBox.Checked);
+			SupportInPlacementCheckbox.Enabled = (!IsOpenQueueMode && SupportRankEnabledCheckBox.Checked);
 
 			if (!MenuItem_StopUpdate.Checked)
 			{

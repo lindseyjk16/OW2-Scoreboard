@@ -24,45 +24,51 @@ namespace OW2ScoreboardController
 			public int Wins;
 			public int Loses;
 			public int Draws;
-			public bool IsTankStartingRateEnabled;
-			public bool IsDamageStartingRateEnabled;
-			public bool IsSupportStartingRateEnabled;
-			public int TankStartingRate;
-			public int DamageStartingRate;
-			public int SupportStartingRate;
-			public bool IsTankInPlacement;
+			public bool IsTankRankEnabled;
+			public bool IsDamageRankEnabled;
+			public bool IsSupportRankEnabled;
+			public string TankRankDivision;
+			public int TankRankTier;
+			public string DamageRankDivision;
+			public int DamageRankTier;
+			public string SupportRankDivision;
+			public int SupportRankTier;
+            public bool IsTankInPlacement;
 			public bool IsDamageInPlacement;
 			public bool IsSupportInPlacement;
 			public bool IsOpenQueueMode;
 			public string TimeStamp;
 
 			/// <summary>
-			/// Constructor.
-			/// </summary>
-			public Score( int Wins, int Loses, int Draws, bool IsTankStartingRateEnabled, bool IsDamageStartingRateEnabled, bool IsSupportStartingRateEnabled, int TankStartingRate, int DamageStartingRate, int SupportStartingRate, bool IsTankInPlacement, bool IsDamageInPlacement, bool IsSupportInPlacement, bool IsOpenQueueMode)
-			{
-				this.Wins = Wins;
-				this.Loses = Loses;
-				this.Draws = Draws;
-				this.IsTankStartingRateEnabled = IsTankStartingRateEnabled;
-				this.IsDamageStartingRateEnabled = IsDamageStartingRateEnabled;
-				this.IsSupportStartingRateEnabled = IsSupportStartingRateEnabled;
-				this.IsTankInPlacement = IsTankInPlacement;
-				this.IsDamageInPlacement = IsDamageInPlacement;
-				this.IsSupportInPlacement = IsSupportInPlacement;
-				this.TankStartingRate = TankStartingRate;
-				this.DamageStartingRate = DamageStartingRate;
-				this.SupportStartingRate = SupportStartingRate;
-				this.IsOpenQueueMode = IsOpenQueueMode;
-			}
+            /// Constructor.
+            /// </summary>
+            public Score(int Wins, int Loses, int Draws, bool IsTankRankEnabled, bool IsDamageRankEnabled, bool IsSupportRankEnabled, string TankRankDivision, int TankRankTier, string DamageRankDivision, int DamageRankTier, string SupportRankDivision, int SupportRankTier, bool IsTankInPlacement, bool IsDamageInPlacement, bool IsSupportInPlacement, bool IsOpenQueueMode)
+            {
+                this.Wins = Wins;
+                this.Loses = Loses;
+                this.Draws = Draws;
+                this.IsTankRankEnabled = IsTankRankEnabled;
+                this.IsDamageRankEnabled = IsDamageRankEnabled;
+                this.IsSupportRankEnabled = IsSupportRankEnabled;
+                this.IsTankInPlacement = IsTankInPlacement;
+                this.IsDamageInPlacement = IsDamageInPlacement;
+                this.IsSupportInPlacement = IsSupportInPlacement;
+				this.TankRankDivision = TankRankDivision;
+                this.TankRankTier = TankRankTier;
+				this.DamageRankDivision = DamageRankDivision;
+                this.DamageRankTier = DamageRankTier;
+				this.SupportRankDivision = SupportRankDivision;
+                this.SupportRankTier = SupportRankTier;
+                this.IsOpenQueueMode = IsOpenQueueMode;
+            }
 
-			/// <summary>
-			/// Returns the default Score.
-			/// </summary>
-			public static Score Default()
+            /// <summary>
+            /// Returns the default Score.
+            /// </summary>
+            public static Score Default()
 			{
-				return new Score( 0, 0, 0, true, true, true, 1, 1, 1, false, false, false, false );
-			}
+                return new Score(0, 0, 0, true, true, true, "Bronze", 5, "Bronze", 5, "Bronze", 5, false, false, false, false);
+            }
 		}
 
 		/// <summary>

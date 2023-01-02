@@ -37,16 +37,16 @@
             this.LosesLabel = new System.Windows.Forms.Label();
             this.WinsUpDown = new System.Windows.Forms.NumericUpDown();
             this.WinsLabel = new System.Windows.Forms.Label();
-            this.StartingRateGroupBox = new System.Windows.Forms.GroupBox();
+            this.RankGroupBox = new System.Windows.Forms.GroupBox();
+            this.SupportRankDropdown = new GroupedComboBox();
+            this.TankRankDropdown = new GroupedComboBox();
+            this.DamageRankDropdown = new GroupedComboBox();
             this.SupportInPlacementCheckbox = new System.Windows.Forms.CheckBox();
             this.DamageInPlacementCheckbox = new System.Windows.Forms.CheckBox();
-            this.SupportStartingRateEnabledCheckBox = new System.Windows.Forms.CheckBox();
-            this.DamageStartingRateEnabledCheckBox = new System.Windows.Forms.CheckBox();
-            this.SupportStartingRateUpDown = new System.Windows.Forms.NumericUpDown();
-            this.TankStartingRateEnabledCheckBox = new System.Windows.Forms.CheckBox();
-            this.DamageStartingRateUpDown = new System.Windows.Forms.NumericUpDown();
+            this.SupportRankEnabledCheckBox = new System.Windows.Forms.CheckBox();
+            this.DamageRankEnabledCheckBox = new System.Windows.Forms.CheckBox();
+            this.TankRankEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.TankInPlacementCheckbox = new System.Windows.Forms.CheckBox();
-            this.TankStartingRateUpDown = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.DrawButton = new System.Windows.Forms.Button();
             this.LoseButton = new System.Windows.Forms.Button();
@@ -78,10 +78,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DrawsUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LosesUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinsUpDown)).BeginInit();
-            this.StartingRateGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SupportStartingRateUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DamageStartingRateUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TankStartingRateUpDown)).BeginInit();
+            this.RankGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.MenuBar.SuspendLayout();
             this.SuspendLayout();
@@ -181,25 +178,58 @@
             this.WinsLabel.TabIndex = 1;
             this.WinsLabel.Text = "Wins";
             // 
-            // StartingRateGroupBox
+            // RankGroupBox
             // 
-            this.StartingRateGroupBox.Controls.Add(this.SupportInPlacementCheckbox);
-            this.StartingRateGroupBox.Controls.Add(this.DamageInPlacementCheckbox);
-            this.StartingRateGroupBox.Controls.Add(this.SupportStartingRateEnabledCheckBox);
-            this.StartingRateGroupBox.Controls.Add(this.DamageStartingRateEnabledCheckBox);
-            this.StartingRateGroupBox.Controls.Add(this.SupportStartingRateUpDown);
-            this.StartingRateGroupBox.Controls.Add(this.TankStartingRateEnabledCheckBox);
-            this.StartingRateGroupBox.Controls.Add(this.DamageStartingRateUpDown);
-            this.StartingRateGroupBox.Controls.Add(this.TankInPlacementCheckbox);
-            this.StartingRateGroupBox.Controls.Add(this.TankStartingRateUpDown);
-            this.StartingRateGroupBox.Location = new System.Drawing.Point(17, 202);
-            this.StartingRateGroupBox.Margin = new System.Windows.Forms.Padding(8);
-            this.StartingRateGroupBox.Name = "StartingRateGroupBox";
-            this.StartingRateGroupBox.Padding = new System.Windows.Forms.Padding(8);
-            this.StartingRateGroupBox.Size = new System.Drawing.Size(334, 149);
-            this.StartingRateGroupBox.TabIndex = 1;
-            this.StartingRateGroupBox.TabStop = false;
-            this.StartingRateGroupBox.Text = "Starting Rate";
+            this.RankGroupBox.Controls.Add(this.SupportRankDropdown);
+            this.RankGroupBox.Controls.Add(this.TankRankDropdown);
+            this.RankGroupBox.Controls.Add(this.DamageRankDropdown);
+            this.RankGroupBox.Controls.Add(this.SupportInPlacementCheckbox);
+            this.RankGroupBox.Controls.Add(this.DamageInPlacementCheckbox);
+            this.RankGroupBox.Controls.Add(this.SupportRankEnabledCheckBox);
+            this.RankGroupBox.Controls.Add(this.DamageRankEnabledCheckBox);
+            this.RankGroupBox.Controls.Add(this.TankRankEnabledCheckBox);
+            this.RankGroupBox.Controls.Add(this.TankInPlacementCheckbox);
+            this.RankGroupBox.Location = new System.Drawing.Point(17, 202);
+            this.RankGroupBox.Margin = new System.Windows.Forms.Padding(8);
+            this.RankGroupBox.Name = "RankGroupBox";
+            this.RankGroupBox.Padding = new System.Windows.Forms.Padding(8);
+            this.RankGroupBox.Size = new System.Drawing.Size(334, 149);
+            this.RankGroupBox.TabIndex = 1;
+            this.RankGroupBox.TabStop = false;
+            this.RankGroupBox.Text = "Rank";
+            // 
+            // SupportRankDropdown
+            // 
+            this.SupportRankDropdown.DataSource = null;
+            this.SupportRankDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SupportRankDropdown.FormattingEnabled = true;
+            this.SupportRankDropdown.Location = new System.Drawing.Point(95, 109);
+            this.SupportRankDropdown.Name = "SupportRankDropdown";
+            this.SupportRankDropdown.Size = new System.Drawing.Size(111, 22);
+            this.SupportRankDropdown.TabIndex = 16;
+            this.SupportRankDropdown.SelectedIndexChanged += new System.EventHandler(this.SupportRankDropdown_SelectedIndexChanged);
+            // 
+            // TankRankDropdown
+            // 
+            this.TankRankDropdown.DataSource = null;
+            this.TankRankDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.TankRankDropdown.FormattingEnabled = true;
+            this.TankRankDropdown.Location = new System.Drawing.Point(95, 31);
+            this.TankRankDropdown.Name = "TankRankDropdown";
+            this.TankRankDropdown.Size = new System.Drawing.Size(111, 22);
+            this.TankRankDropdown.TabIndex = 14;
+            this.TankRankDropdown.SelectedIndexChanged += new System.EventHandler(this.TankRankDropdown_SelectedIndexChanged);
+            // 
+            // DamageRankDropdown
+            // 
+            this.DamageRankDropdown.DataSource = null;
+            this.DamageRankDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.DamageRankDropdown.FormattingEnabled = true;
+            this.DamageRankDropdown.Location = new System.Drawing.Point(95, 72);
+            this.DamageRankDropdown.Name = "DamageRankDropdown";
+            this.DamageRankDropdown.Size = new System.Drawing.Size(111, 22);
+            this.DamageRankDropdown.TabIndex = 15;
+            this.DamageRankDropdown.SelectedIndexChanged += new System.EventHandler(this.DamageRankDropdown_SelectedIndexChanged);
             // 
             // SupportInPlacementCheckbox
             // 
@@ -223,94 +253,44 @@
             this.DamageInPlacementCheckbox.UseVisualStyleBackColor = true;
             this.DamageInPlacementCheckbox.CheckedChanged += new System.EventHandler(this.DamageInPlacementCheckbox_CheckedChanged);
             // 
-            // SupportStartingRateEnabledCheckBox
+            // SupportRankEnabledCheckBox
             // 
-            this.SupportStartingRateEnabledCheckBox.AutoSize = true;
-            this.SupportStartingRateEnabledCheckBox.Checked = true;
-            this.SupportStartingRateEnabledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SupportStartingRateEnabledCheckBox.Location = new System.Drawing.Point(11, 111);
-            this.SupportStartingRateEnabledCheckBox.Name = "SupportStartingRateEnabledCheckBox";
-            this.SupportStartingRateEnabledCheckBox.Size = new System.Drawing.Size(69, 19);
-            this.SupportStartingRateEnabledCheckBox.TabIndex = 10;
-            this.SupportStartingRateEnabledCheckBox.Text = "Support";
-            this.SupportStartingRateEnabledCheckBox.UseVisualStyleBackColor = true;
-            this.SupportStartingRateEnabledCheckBox.CheckedChanged += new System.EventHandler(this.StartingRateSupportCheckBox_CheckedChanged);
+            this.SupportRankEnabledCheckBox.AutoSize = true;
+            this.SupportRankEnabledCheckBox.Checked = true;
+            this.SupportRankEnabledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SupportRankEnabledCheckBox.Location = new System.Drawing.Point(11, 111);
+            this.SupportRankEnabledCheckBox.Name = "SupportRankEnabledCheckBox";
+            this.SupportRankEnabledCheckBox.Size = new System.Drawing.Size(69, 19);
+            this.SupportRankEnabledCheckBox.TabIndex = 10;
+            this.SupportRankEnabledCheckBox.Text = "Support";
+            this.SupportRankEnabledCheckBox.UseVisualStyleBackColor = true;
+            this.SupportRankEnabledCheckBox.CheckedChanged += new System.EventHandler(this.StartingRateSupportCheckBox_CheckedChanged);
             // 
-            // DamageStartingRateEnabledCheckBox
+            // DamageRankEnabledCheckBox
             // 
-            this.DamageStartingRateEnabledCheckBox.AutoSize = true;
-            this.DamageStartingRateEnabledCheckBox.Checked = true;
-            this.DamageStartingRateEnabledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.DamageStartingRateEnabledCheckBox.Location = new System.Drawing.Point(11, 72);
-            this.DamageStartingRateEnabledCheckBox.Name = "DamageStartingRateEnabledCheckBox";
-            this.DamageStartingRateEnabledCheckBox.Size = new System.Drawing.Size(74, 19);
-            this.DamageStartingRateEnabledCheckBox.TabIndex = 9;
-            this.DamageStartingRateEnabledCheckBox.Text = "Damage";
-            this.DamageStartingRateEnabledCheckBox.UseVisualStyleBackColor = true;
-            this.DamageStartingRateEnabledCheckBox.CheckedChanged += new System.EventHandler(this.StartingRateDamageCheckBox_CheckedChanged);
+            this.DamageRankEnabledCheckBox.AutoSize = true;
+            this.DamageRankEnabledCheckBox.Checked = true;
+            this.DamageRankEnabledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DamageRankEnabledCheckBox.Location = new System.Drawing.Point(11, 72);
+            this.DamageRankEnabledCheckBox.Name = "DamageRankEnabledCheckBox";
+            this.DamageRankEnabledCheckBox.Size = new System.Drawing.Size(74, 19);
+            this.DamageRankEnabledCheckBox.TabIndex = 9;
+            this.DamageRankEnabledCheckBox.Text = "Damage";
+            this.DamageRankEnabledCheckBox.UseVisualStyleBackColor = true;
+            this.DamageRankEnabledCheckBox.CheckedChanged += new System.EventHandler(this.StartingRateDamageCheckBox_CheckedChanged);
             // 
-            // SupportStartingRateUpDown
+            // TankRankEnabledCheckBox
             // 
-            this.SupportStartingRateUpDown.Location = new System.Drawing.Point(97, 110);
-            this.SupportStartingRateUpDown.Margin = new System.Windows.Forms.Padding(8);
-            this.SupportStartingRateUpDown.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.SupportStartingRateUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.SupportStartingRateUpDown.Name = "SupportStartingRateUpDown";
-            this.SupportStartingRateUpDown.Size = new System.Drawing.Size(112, 21);
-            this.SupportStartingRateUpDown.TabIndex = 8;
-            this.SupportStartingRateUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.SupportStartingRateUpDown.ValueChanged += new System.EventHandler(this.SupportStartingRateUpDown_ValueChanged);
-            this.SupportStartingRateUpDown.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SupportStartingRateUpDown_KeyUp);
-            // 
-            // TankStartingRateEnabledCheckBox
-            // 
-            this.TankStartingRateEnabledCheckBox.AutoSize = true;
-            this.TankStartingRateEnabledCheckBox.Checked = true;
-            this.TankStartingRateEnabledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.TankStartingRateEnabledCheckBox.Location = new System.Drawing.Point(11, 33);
-            this.TankStartingRateEnabledCheckBox.Name = "TankStartingRateEnabledCheckBox";
-            this.TankStartingRateEnabledCheckBox.Size = new System.Drawing.Size(53, 19);
-            this.TankStartingRateEnabledCheckBox.TabIndex = 7;
-            this.TankStartingRateEnabledCheckBox.Text = "Tank";
-            this.TankStartingRateEnabledCheckBox.UseVisualStyleBackColor = true;
-            this.TankStartingRateEnabledCheckBox.CheckedChanged += new System.EventHandler(this.StartingRateTankCheckBox_CheckedChanged);
-            // 
-            // DamageStartingRateUpDown
-            // 
-            this.DamageStartingRateUpDown.Location = new System.Drawing.Point(97, 71);
-            this.DamageStartingRateUpDown.Margin = new System.Windows.Forms.Padding(8);
-            this.DamageStartingRateUpDown.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.DamageStartingRateUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.DamageStartingRateUpDown.Name = "DamageStartingRateUpDown";
-            this.DamageStartingRateUpDown.Size = new System.Drawing.Size(112, 21);
-            this.DamageStartingRateUpDown.TabIndex = 5;
-            this.DamageStartingRateUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.DamageStartingRateUpDown.ValueChanged += new System.EventHandler(this.DamageStartingRateUpDown_ValueChanged);
-            this.DamageStartingRateUpDown.KeyUp += new System.Windows.Forms.KeyEventHandler(this.DamageStartingRateUpDown_KeyUp);
+            this.TankRankEnabledCheckBox.AutoSize = true;
+            this.TankRankEnabledCheckBox.Checked = true;
+            this.TankRankEnabledCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.TankRankEnabledCheckBox.Location = new System.Drawing.Point(11, 33);
+            this.TankRankEnabledCheckBox.Name = "TankRankEnabledCheckBox";
+            this.TankRankEnabledCheckBox.Size = new System.Drawing.Size(53, 19);
+            this.TankRankEnabledCheckBox.TabIndex = 7;
+            this.TankRankEnabledCheckBox.Text = "Tank";
+            this.TankRankEnabledCheckBox.UseVisualStyleBackColor = true;
+            this.TankRankEnabledCheckBox.CheckedChanged += new System.EventHandler(this.StartingRateTankCheckBox_CheckedChanged);
             // 
             // TankInPlacementCheckbox
             // 
@@ -322,31 +302,6 @@
             this.TankInPlacementCheckbox.Text = "In Placement";
             this.TankInPlacementCheckbox.UseVisualStyleBackColor = true;
             this.TankInPlacementCheckbox.CheckedChanged += new System.EventHandler(this.InPlacementCheckbox_CheckedChanged);
-            // 
-            // TankStartingRateUpDown
-            // 
-            this.TankStartingRateUpDown.Location = new System.Drawing.Point(97, 32);
-            this.TankStartingRateUpDown.Margin = new System.Windows.Forms.Padding(8);
-            this.TankStartingRateUpDown.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.TankStartingRateUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.TankStartingRateUpDown.Name = "TankStartingRateUpDown";
-            this.TankStartingRateUpDown.Size = new System.Drawing.Size(112, 21);
-            this.TankStartingRateUpDown.TabIndex = 0;
-            this.TankStartingRateUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.TankStartingRateUpDown.ValueChanged += new System.EventHandler(this.TankStartingRateUpDown_ValueChanged);
-            this.TankStartingRateUpDown.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TankStartingRateUpDown_KeyUp);
             // 
             // groupBox1
             // 
@@ -448,7 +403,7 @@
             // 
             this.MenuItem_AlwayOnTop.CheckOnClick = true;
             this.MenuItem_AlwayOnTop.Name = "MenuItem_AlwayOnTop";
-            this.MenuItem_AlwayOnTop.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_AlwayOnTop.Size = new System.Drawing.Size(165, 22);
             this.MenuItem_AlwayOnTop.Text = "Always On Top";
             this.MenuItem_AlwayOnTop.Click += new System.EventHandler(this.MenuItem_AlwayOnTop_Click);
             // 
@@ -456,14 +411,14 @@
             // 
             this.MenuItem_StopUpdate.CheckOnClick = true;
             this.MenuItem_StopUpdate.Name = "MenuItem_StopUpdate";
-            this.MenuItem_StopUpdate.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_StopUpdate.Size = new System.Drawing.Size(165, 22);
             this.MenuItem_StopUpdate.Text = "Suspend Updates";
             this.MenuItem_StopUpdate.Click += new System.EventHandler(this.MenuItem_StopUpdate_Click);
             // 
             // MenuItem_ClearScore
             // 
             this.MenuItem_ClearScore.Name = "MenuItem_ClearScore";
-            this.MenuItem_ClearScore.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_ClearScore.Size = new System.Drawing.Size(165, 22);
             this.MenuItem_ClearScore.Text = "Clear Score";
             this.MenuItem_ClearScore.Click += new System.EventHandler(this.MenuItem_ClearScore_Click);
             // 
@@ -473,7 +428,7 @@
             this.MenuItem_SwitchMode_RoleQueue,
             this.MenuItem_SwitchMode_OpenQueue});
             this.MenuItem_SwitchMode.Name = "MenuItem_SwitchMode";
-            this.MenuItem_SwitchMode.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_SwitchMode.Size = new System.Drawing.Size(165, 22);
             this.MenuItem_SwitchMode.Text = "Switch Mode";
             // 
             // MenuItem_SwitchMode_RoleQueue
@@ -495,7 +450,7 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(162, 6);
             // 
             // MenuItem_Language
             // 
@@ -505,7 +460,7 @@
             this.MenuItem_Language_Japanese,
             this.MenuItem_Language_English});
             this.MenuItem_Language.Name = "MenuItem_Language";
-            this.MenuItem_Language.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Language.Size = new System.Drawing.Size(165, 22);
             this.MenuItem_Language.Text = "Language (&L)";
             // 
             // MenuItem_Language_Automatic
@@ -513,39 +468,39 @@
             this.MenuItem_Language_Automatic.Checked = true;
             this.MenuItem_Language_Automatic.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MenuItem_Language_Automatic.Name = "MenuItem_Language_Automatic";
-            this.MenuItem_Language_Automatic.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Language_Automatic.Size = new System.Drawing.Size(130, 22);
             this.MenuItem_Language_Automatic.Text = "Automatic";
             this.MenuItem_Language_Automatic.Click += new System.EventHandler(this.MenuItem_Language_Automatic_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(127, 6);
             // 
             // MenuItem_Language_Japanese
             // 
             this.MenuItem_Language_Japanese.Enabled = false;
             this.MenuItem_Language_Japanese.Name = "MenuItem_Language_Japanese";
-            this.MenuItem_Language_Japanese.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Language_Japanese.Size = new System.Drawing.Size(130, 22);
             this.MenuItem_Language_Japanese.Text = "日本語";
             this.MenuItem_Language_Japanese.Click += new System.EventHandler(this.MenuItem_Language_Japanese_Click);
             // 
             // MenuItem_Language_English
             // 
             this.MenuItem_Language_English.Name = "MenuItem_Language_English";
-            this.MenuItem_Language_English.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Language_English.Size = new System.Drawing.Size(130, 22);
             this.MenuItem_Language_English.Text = "English";
             this.MenuItem_Language_English.Click += new System.EventHandler(this.MenuItem_Language_English_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(162, 6);
             // 
             // MenuItem_Settings
             // 
             this.MenuItem_Settings.Name = "MenuItem_Settings";
-            this.MenuItem_Settings.Size = new System.Drawing.Size(180, 22);
+            this.MenuItem_Settings.Size = new System.Drawing.Size(165, 22);
             this.MenuItem_Settings.Text = "Settings (&C)...";
             this.MenuItem_Settings.Click += new System.EventHandler(this.MenuItem_Settings_Click);
             // 
@@ -585,7 +540,7 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(368, 368);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.StartingRateGroupBox);
+            this.Controls.Add(this.RankGroupBox);
             this.Controls.Add(this.ScoreGroupBox);
             this.Controls.Add(this.MenuBar);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -603,11 +558,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.DrawsUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LosesUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WinsUpDown)).EndInit();
-            this.StartingRateGroupBox.ResumeLayout(false);
-            this.StartingRateGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SupportStartingRateUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DamageStartingRateUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TankStartingRateUpDown)).EndInit();
+            this.RankGroupBox.ResumeLayout(false);
+            this.RankGroupBox.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();
@@ -619,14 +571,13 @@
 		#endregion
 
 		private System.Windows.Forms.GroupBox ScoreGroupBox;
-		private System.Windows.Forms.GroupBox StartingRateGroupBox;
+		private System.Windows.Forms.GroupBox RankGroupBox;
 		private System.Windows.Forms.Label LosesLabel;
 		private System.Windows.Forms.Label WinsLabel;
 		private System.Windows.Forms.NumericUpDown WinsUpDown;
 		private System.Windows.Forms.NumericUpDown LosesUpDown;
 		private System.Windows.Forms.Label DrawsLabel;
 		private System.Windows.Forms.NumericUpDown DrawsUpDown;
-		private System.Windows.Forms.NumericUpDown TankStartingRateUpDown;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button WinButton;
 		private System.Windows.Forms.Button DrawButton;
@@ -651,17 +602,18 @@
 		private System.Windows.Forms.ToolStripMenuItem MenuItem_Language_Japanese;
 		private System.Windows.Forms.ToolStripMenuItem MenuItem_Language_English;
 		private System.Windows.Forms.CheckBox TankInPlacementCheckbox;
-		private System.Windows.Forms.NumericUpDown DamageStartingRateUpDown;
 		private System.Windows.Forms.CheckBox SupportInPlacementCheckbox;
 		private System.Windows.Forms.CheckBox DamageInPlacementCheckbox;
-		private System.Windows.Forms.CheckBox SupportStartingRateEnabledCheckBox;
-		private System.Windows.Forms.CheckBox DamageStartingRateEnabledCheckBox;
-		private System.Windows.Forms.NumericUpDown SupportStartingRateUpDown;
-		private System.Windows.Forms.CheckBox TankStartingRateEnabledCheckBox;
+		private System.Windows.Forms.CheckBox SupportRankEnabledCheckBox;
+		private System.Windows.Forms.CheckBox DamageRankEnabledCheckBox;
+		private System.Windows.Forms.CheckBox TankRankEnabledCheckBox;
 		private System.Windows.Forms.ToolStripMenuItem MenuItem_ClearScore;
 		private System.Windows.Forms.ToolStripMenuItem MenuItem_SwitchMode;
 		private System.Windows.Forms.ToolStripMenuItem MenuItem_SwitchMode_RoleQueue;
 		private System.Windows.Forms.ToolStripMenuItem MenuItem_SwitchMode_OpenQueue;
-	}
+        private GroupedComboBox SupportRankDropdown;
+        private GroupedComboBox TankRankDropdown;
+        private GroupedComboBox DamageRankDropdown;
+    }
 }
 

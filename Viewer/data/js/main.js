@@ -12,12 +12,16 @@
 	var ScoreFilePath = "./score.json";
 	var ConfigFilePath = "./config.json";
 
+	const NUMBER_OF_DIVISIONS = 7;
+	const NUMBER_OF_TIERS = 5;
+	const compareIgnoreCase = (string1, string2) => string1.toLowerCase() === string2.toLowerCase();
+
 	//--------------------------------------------------------------------------
 	// Initialize
 	//--------------------------------------------------------------------------
 	function Initialize()
 	{
-		// はじめにすべてのボードを非表示に
+		// First hide all boards
 		$('.Board').hide();
 
 		Elements = {
@@ -52,14 +56,14 @@
 			xhr.send();
 			xhr.onreadystatechange = function(){
 				if (xhr.readyState === 4) {
-					// 前回の状態を記憶
+					// Remember previous state
 					if( ScoreFile != undefined )
 					{
 						OldScoreFile = ScoreFile;
 					}
-					// 読み込んだ json をパースする
+					// Parse the loaded Json
 					ScoreFile = JSON.parse(xhr.responseText);
-					// 初回はOldScoreFileと同期し、スコアボードを更新する
+					// Set OldScoreFile and update scoreboard
 					if( OldScoreFile == undefined )
 					{
 						OldScoreFile = ScoreFile;
@@ -89,7 +93,7 @@
 
 		var startingRate = $('#ScoreBoard > .StartingRate');
 		var spacer = $('#ScoreBoard > .Spacer');
-		if( ScoreFile.IsOpenQueueMode || ScoreFile.IsTankStartingRateEnabled || ScoreFile.IsDamageStartingRateEnabled || ScoreFile.IsSupportStartingRateEnabled )
+		if( ScoreFile.IsOpenQueueMode || ScoreFile.IsTankRankEnabled || ScoreFile.IsDamageRankEnabled || ScoreFile.IsSupportRankEnabled )
 		{
 			startingRate.show();
 			spacer.show();
@@ -101,15 +105,15 @@
 		}
 
 		var activeStartingRateRole = null;
-		if( ScoreFile.IsOpenQueueMode || ScoreFile.IsTankStartingRateEnabled )
+		if( ScoreFile.IsOpenQueueMode || ScoreFile.IsTankRankEnabled )
 		{
 			activeStartingRateRole = "Tank";
 		}
-		else if( ScoreFile.IsDamageStartingRateEnabled )
+		else if( ScoreFile.IsDamageRankEnabled )
 		{
 			activeStartingRateRole = "Damage";
 		}
-		else if( ScoreFile.IsSupportStartingRateEnabled )
+		else if( ScoreFile.IsSupportRankEnabled )
 		{
 			activeStartingRateRole = "Support";
 		}
@@ -124,23 +128,26 @@
 		{
 			tankRoleIcon.show();
 		}
-		// オープンキューモードの場合はタンクのノードのみを使用
+		// Only use the tank node if in open queue mode
 		startingRates["Tank"] = {
-			SkillRate: ScoreFile.TankStartingRate,
+			RankDivision: ScoreFile.TankRankDivision,
+			RankTier: ScoreFile.TankRankTier,
 			IsInPlacement: ScoreFile.IsTankInPlacement,
-			IsShow: (ScoreFile.IsOpenQueueMode || ScoreFile.IsTankStartingRateEnabled),
+			IsShow: (ScoreFile.IsOpenQueueMode || ScoreFile.IsTankRankEnabled),
 			Opacity: (activeStartingRateRole == "Tank" || ScoreFile.IsOpenQueueMode) ? '1' : '0'
 		};
 		startingRates["Damage"] = {
-			SkillRate: ScoreFile.DamageStartingRate,
+			RankDivision: ScoreFile.DamageRankDivision,
+			RankTier: ScoreFile.DamageRankTier,
 			IsInPlacement: ScoreFile.IsDamageInPlacement,
-			IsShow: (!ScoreFile.IsOpenQueueMode && ScoreFile.IsDamageStartingRateEnabled),
+			IsShow: (!ScoreFile.IsOpenQueueMode && ScoreFile.IsDamageRankEnabled),
 			Opacity: activeStartingRateRole == "Damage" ? '1' : '0'
 		};
 		startingRates["Support"] = {
-			SkillRate: ScoreFile.SupportStartingRate,
+			RankDivision: ScoreFile.SupportRankDivision,
+			RankTier: ScoreFile.SupportRankTier,
 			IsInPlacement: ScoreFile.IsSupportInPlacement,
-			IsShow: (!ScoreFile.IsOpenQueueMode && ScoreFile.IsSupportStartingRateEnabled),
+			IsShow: (!ScoreFile.IsOpenQueueMode && ScoreFile.IsSupportRankEnabled),
 			Opacity: activeStartingRateRole == "Support" ? '1' : '0'
 		};
 
@@ -148,13 +155,13 @@
 		{
 			var startingRate = startingRates[key];
 			var targetRole = key;
-			if( startingRate.IsInPlacement )
+			if (startingRate.IsInPlacement)
 			{
-				SetStartingRate(-1, targetRole, startingRate.IsShow, startingRate.Opacity);
+				SetStartingRate("PLACEMENT", 5, targetRole, startingRate.IsShow, startingRate.Opacity);
 			}
 			else
 			{
-				SetStartingRate(startingRate.SkillRate, targetRole, startingRate.IsShow, startingRate.Opacity);
+				SetStartingRate(startingRate.RankDivision, startingRate.RankTier, targetRole, startingRate.IsShow, startingRate.Opacity);
 			}
 		});
 
@@ -172,14 +179,14 @@
 		xhr.send();
 		xhr.onreadystatechange = function(){
 			if (xhr.readyState === 4) {
-				// 前回の状態を記憶
+				// Remember previous stte
 				if( ConfigFile != undefined )
 				{
 					OldConfigFile = ConfigFile;
 				}
-				// 読み込んだ json をパースする
+				// Parse loaded Json
 				ConfigFile = JSON.parse(xhr.responseText);
-				// 初回はOldScoreFileと同期し、Configを反映する
+				// Set OldConfigFile and configure
 				if( OldConfigFile == undefined )
 				{
 					OldConfigFile = ConfigFile;
@@ -200,22 +207,22 @@
 	{
 		console.log("SetConfig");
 
-		// 名前を反映
+		// Set name
 		$('#Wins > .Name, #Loses > .Name').text(ConfigFile.Name);
 
-		// ロゴ画像を反映
+		// Set logo image
 		$('#Wins > .Logo > img, #Loses > .Logo > img').attr('src', ConfigFile.LogoImageFilePath+"?dummy="+Date.now());
 
-		// メインカラーを反映
+		// Set primary color
 		$('#Wins, #Loses, #Draw').css('background', ConfigFile.MainColorHtml);
 
-		// サブカラーを反映
+		// Set secondary color
 		$('#Transition, #EdgeLeft, #EdgeRight').css('background', ConfigFile.SubColorHtml);
 
-		// フォントカラーを反映
+		// Set font color
 		$('#Wins, #Loses, #Draw').css('color', ConfigFile.FontColorHtml);
 
-		// スコアボードサイズと位置を反映
+		// Set scoreboard size and position
 		var Size = ConfigFile.ScoreBoardSize/100.0;
 		var Margin = 4*Size;//vh
 		$('#ScoreBoard').css('transform', 'scale('+Size+')')
@@ -266,15 +273,21 @@
 				UpdateType = "General";
 			}
 		}
-		if( ScoreFile.IsTankStartingRateEnabled != OldScoreFile.IsTankStartingRateEnabled
-		||	ScoreFile.IsDamageStartingRateEnabled != OldScoreFile.IsDamageStartingRateEnabled
-		||	ScoreFile.IsSupportStartingRateEnabled != OldScoreFile.IsSupportStartingRateEnabled )
+		if( ScoreFile.IsTankRankEnabled != OldScoreFile.IsTankRankEnabled
+		||	ScoreFile.IsDamageRankEnabled != OldScoreFile.IsDamageRankEnabled
+		||	ScoreFile.IsSupportRankEnabled != OldScoreFile.IsSupportRankEnabled )
 		{
 			UpdateType = "General";
 		}
-		if( ScoreFile.TankStartingRate != OldScoreFile.TankStartingRate
-		||	ScoreFile.DamageStartingRate != OldScoreFile.DamageStartingRate
-		||	ScoreFile.SupportStartingRate != OldScoreFile.SupportStartingRate )
+		if (ScoreFile.TankRankDivision != OldScoreFile.TankRankDivision
+		|| ScoreFile.DamageRankDivision != OldScoreFile.DamageRankDivision
+		|| ScoreFile.SupportRankDivision != OldScoreFile.SupportRankDivision)
+		{
+			UpdateType = "General";
+		}
+		if( ScoreFile.TankRankTier != OldScoreFile.TankRankTier
+		||	ScoreFile.DamageRankTier != OldScoreFile.DamageRankTier
+		||	ScoreFile.SupportRankTier != OldScoreFile.SupportRankTier )
 		{
 			UpdateType = "General";
 		}
@@ -460,11 +473,10 @@
 	//--------------------------------------------------------------------------
 	// SetStartingRate
 	//--------------------------------------------------------------------------
-	function SetStartingRate(sr, role, isShow, opacity)
-	{
-		var targetRole = $('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role);
-		targetRole.animate({'opacity': opacity}, 0);
-		if( isShow )
+	function SetStartingRate(division, tier, role, isShown, opacity) {
+		var targetRole = $('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role);
+		targetRole.animate({ 'opacity': opacity }, 0);
+		if (isShown)
 		{
 			targetRole.show();
 		}
@@ -473,41 +485,45 @@
 			targetRole.hide();
 		}
 
-		$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .sr').text(sr);
-		$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division').hide();
-		
-		if( sr == -1 )
+		$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .sr').text(tier);
+		$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division').hide();
+
+		if (compareIgnoreCase(division, "PLACEMENT"))
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .sr').text("In Placement");
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .sr').text("In Placement");
 		}
-		else if( sr <= 1499 )
+		else if (compareIgnoreCase(division, "BRONZE"))
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division.Bronze').show();
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division.Bronze').show();
 		}
-		else if( sr <= 1999 )
+		else if (compareIgnoreCase(division, "SILVER"))
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division.Silver').show();
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division.Silver').show();
 		}
-		else if( sr <= 2499 )
+		else if (compareIgnoreCase(division, "GOLD"))
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division.Gold').show();
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division.Gold').show();
 		}
-		else if( sr <= 2999 )
+		else if (compareIgnoreCase(division, "PLATINUM"))
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division.Platinum').show();
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division.Platinum').show();
 		}
-		else if( sr <= 3499 )
+		else if (compareIgnoreCase(division, "DIAMOND"))
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division.Diamond').show();
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division.Diamond').show();
 		}
-		else if( sr <= 3999 )
+		else if (compareIgnoreCase(division, "MASTER"))
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division.Master').show();
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division.Master').show();
+		}
+		else if (compareIgnoreCase(division, "GRANDMASTER"))
+		{
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .Division.Grandmaster').show();
 		}
 		else
 		{
-			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.'+role+' > .SkillRate > .Division.Grandmaster').show();
-		}
+			$('#ScoreBoard > .StartingRate > .RateContainer > .Role.' + role + ' > .SkillRate > .sr').text("");
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -518,7 +534,7 @@
 		var rateContainer = $('#ScoreBoard > .StartingRate > .RateContainer');
 		var roleElements = rateContainer.children('.Role');
 
-		// 横幅を自動に戻す
+		// Restore width to auto
 		roleElements.each(function(index, element)
 		{
 			$(element).css('width', 'auto');
@@ -532,7 +548,7 @@
 		}
 		else
 		{
-			// 一番大きい要素を割り出す
+			// Get largest element
 			var biggestElement = null;
 			roleElements.each(function(index, element)
 			{
@@ -542,7 +558,7 @@
 				}
 			});
 
-			// すべての要素を一番大きい要素に合わせる
+			// Fit all elements to the largest element
 			var newContainerSize = $(biggestElement).outerWidth();
 			rateContainer.outerWidth(newContainerSize);
 			roleElements.each(function(index, element)
@@ -573,9 +589,9 @@
 		}
 
 		var fadeTable = [];
-		if( ScoreFile.IsTankStartingRateEnabled ){ fadeTable.push("Tank"); }
-		if( ScoreFile.IsDamageStartingRateEnabled ){ fadeTable.push("Damage"); }
-		if( ScoreFile.IsSupportStartingRateEnabled ){ fadeTable.push("Support"); }
+		if( ScoreFile.IsTankRankEnabled ){ fadeTable.push("Tank"); }
+		if( ScoreFile.IsDamageRankEnabled ){ fadeTable.push("Damage"); }
+		if( ScoreFile.IsSupportRankEnabled ){ fadeTable.push("Support"); }
 		if( fadeTable.length <= 1 )
 		{
 			/*
@@ -622,11 +638,11 @@
 	//--------------------------------------------------------------------------
 	function Sleep(ms)
 	{
-		// jQueryのDeferredを作成
+		// Create a jQuery Deferred
 		var objDef = new $.Deferred;
 	
 		setTimeout(function () {
-			// msミリ秒後に、resolve()を実行し、Promiseを完了
+			// After ms milliseconds, resolves and complete the promise
 			objDef.resolve(ms);
 		}, ms);
 
