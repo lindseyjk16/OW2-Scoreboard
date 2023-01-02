@@ -11,3 +11,8 @@ This is a fork of [OwScoreBoard by HIJIKIsw](https://github.com/HIJIKIsw/OwScore
 # Example for use
 
 ![OW2Scoreboard](./Readme/Example.gif)
+
+# Credits
+
+- [DropDownControls](https://github.com/BradSmith1985/DropDownControls) for organizing OW2 ranks in grouped dropdowns.
+- [OW2 Icons](https://ko-fi.com/s/fb20351542) courtesy of [WinterSkyo](https://twitter.com/WinterSkyo).
